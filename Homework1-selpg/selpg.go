@@ -96,7 +96,7 @@ func ProcessArgs(ac int, selpg *selpgArgs) {
 }
 
 func ProcessInput(selpg *selpgArgs) {
-	//fout := os.Stdout
+	fout := os.Stdout
 	result := ""
 	pageCount := 0
 	lineCount := 0
@@ -109,18 +109,19 @@ func ProcessInput(selpg *selpgArgs) {
 			os.Exit(8)
 		}
 		defer file.Close()
-		reader = bufio.NewReader(file)
-		//file.Close()
+		reader = bufio.NewReader(file)		
 	}
 
-	/*if selpg.printDest != "" {
-		fout, err := os.Open(selpg.printDest)
+	if selpg.printDest != "" {
+		file, err := os.OpenFile(selpg.printDest,os.O_RDWR,0777)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Can not open the destination file!\n")
 			os.Exit(9)
 		}
-		writer = bufio.NewWriter(fout)
-	}*/
+		defer file.Close()
+		fout = file
+		//writer = bufio.NewWriter(file)
+	}
 	if selpg.pageType == true {
 		pageCount = 1
 		for {
@@ -138,6 +139,7 @@ func ProcessInput(selpg *selpgArgs) {
 				fmt.Fprintf(os.Stderr, "Write File Error1!\n")
 				os.Exit(11)
 			}*/
+			fout.Write([]byte(str))
 			result = strings.Join([]string{result, str}, "")
 		}
 	} else {
@@ -160,14 +162,14 @@ func ProcessInput(selpg *selpgArgs) {
 				fmt.Fprintf(os.Stderr, "Write File Error1!\n")
 				os.Exit(11)
 			}*/
-			fmt.Fprintf(os.Stdout, str)
+			fout.Write([]byte(str))
+			//fmt.Fprintf(os.Stdout, str)
 			result = strings.Join([]string{result, str}, "")
 		}
 	}
 	if selpg.printDest != "" {
 		cmd := exec.Command("lp", "-d"+selpg.printDest)
 		cmd.Stdin = strings.NewReader(result)
-		//fmt.Fprintf(os.Stdout, result)
 		var stderrOut bytes.Buffer
 		cmd.Stderr = &stderrOut
 		err := cmd.Run()
