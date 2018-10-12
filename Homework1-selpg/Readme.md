@@ -1,3 +1,3 @@
 + 编译运行
   + go build selpg.go
-  + ./selpg + 测试的参数
+  + 示例的运行语句：./selpg -s 1 -e 1 -d output.txt input.txt
