@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
-const MAX_INT = int(^uint(0) >> 1)
+const MAX_INT = int(^uint(0) >> 1)  
 
 type selpgArgs struct {
 	// selpg -s startPage -e endPage [-l linePerPage | -f ][-d dest] filename
